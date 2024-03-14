@@ -16,6 +16,13 @@ spec:
     spec:
       containers:
       - name: netflix-app
-        image: sreedhar8897/netflix:latest
+        image: docker.io/agus3rdyoga/netflix:latest
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
