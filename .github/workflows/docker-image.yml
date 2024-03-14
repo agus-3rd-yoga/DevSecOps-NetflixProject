@@ -3,16 +3,47 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
+
   pull_request:
     branches: [ "main" ]
 
 jobs:
-
-  build:
+  lint-dockerfile:
+    name: Lint Dockerfile
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mynetflix:latest
+      - uses: actions/checkout@master
+      - uses: hadolint/hadolint-action@master
+        with:
+          dockerfile: "Dockerfile"
+          #failure-threshold: error
+
+  build-docker-image:
+    name: Build & push image to Docker registry
+
+    needs: ["lint-dockerfile"]
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@master
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@master
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push image to Docker Hub
+      uses: docker/build-push-action@master
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/mynetflix:latest
