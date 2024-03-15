@@ -21,7 +21,7 @@ jobs:
           #failure-threshold: error
 
   build-docker-image:
-    name: Build & push image to Docker registry
+    name: Build & push image to Docker Hub
 
     needs: ["lint-dockerfile"]
 
@@ -32,17 +32,14 @@ jobs:
       packages: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@master
+    - uses: actions/checkout@master
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@master
+    - uses: docker/login-action@master
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push image to Docker Hub
-      uses: docker/build-push-action@master
+    - uses: docker/build-push-action@master
       with:
         context: .
         push: true
