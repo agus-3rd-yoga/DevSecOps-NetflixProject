@@ -42,5 +42,7 @@ jobs:
     - uses: docker/build-push-action@master
       with:
         context: .
+        build-args: |
+          TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/mynetflix:latest
