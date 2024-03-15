@@ -80,7 +80,7 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       
-    - uses: docker/build-push-action@masters
+    - uses: docker/build-push-action@master
       with:
         context: .
         build-args: |
