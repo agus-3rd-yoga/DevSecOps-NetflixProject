@@ -20,7 +20,7 @@ jobs:
           dockerfile: "Dockerfile"
           #failure-threshold: error
 
-  build-docker-image:
+  build-and-push-image-to-Dockerhub-registries:
     name: Build & push image to Docker Hub
 
     needs: ["lint-dockerfile"]
@@ -46,3 +46,39 @@ jobs:
           TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/mynetflix:latest
+
+  build-and-push-image-to-Github-registries:
+
+    name: Pushing image to Github registry
+      
+    needs: ["lint-dockerfile"]
+
+    runs-on: ubuntu-latest
+      
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - uses: actions/checkout@master
+     
+    - uses: docker/login-action@master
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      
+    - id: meta
+      uses: docker/metadata-action@master
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            
+      
+    - uses: docker/build-push-action@master
+      with:
+        context: .
+        build-args: |
+          TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
