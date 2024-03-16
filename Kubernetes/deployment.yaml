@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: myneflix
-        image: docker.io/agus3rdyoga/netflix:latest
+        image: docker.io/agus3rdyoga/mynetflix:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
