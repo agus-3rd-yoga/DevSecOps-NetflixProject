@@ -39,32 +39,32 @@ jobs:
           TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/mynetflix:latest
-  build-and-push-image-to-Github-registry:
-    name: Pushing image to Github registry    
-    needs: ["lint-dockerfile"]
-    runs-on: ubuntu-latest    
-    permissions:
-      contents: read
-      packages: write
-    steps:
-    - uses: actions/checkout@master
-      with:
-        ref: 'main'    
-    - uses: docker/login-action@master
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GH_TOKEN }}
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@master
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}     
-    - uses: docker/build-push-action@master
-      with:
-        context: .
-        build-args: |
-          TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
-        push: true
-        tags: latest
-        labels: ${{ steps.meta.outputs.labels }}
+  #build-and-push-image-to-Github-registry:
+    #name: Pushing image to Github registry    
+    #needs: ["lint-dockerfile"]
+    #runs-on: ubuntu-latest    
+    #permissions:
+      #contents: read
+      #packages: write
+    #steps:
+    #- uses: actions/checkout@master
+      #with:
+        #ref: 'main'    
+    #- uses: docker/login-action@master
+      #with:
+        #registry: ${{ env.REGISTRY }}
+        #username: ${{ github.actor }}
+        #password: ${{ secrets.GH_TOKEN }}
+    #- name: Extract metadata (tags, labels) for Docker
+      #id: meta
+      #uses: docker/metadata-action@master
+      #with:
+        #images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}     
+    #- uses: docker/build-push-action@master
+      #with:
+        #context: .
+        #build-args: |
+          #TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
+        #push: true
+        #tags: latest
+        #labels: ${{ steps.meta.outputs.labels }}
