@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: mynetflix
   labels:
-    app: myneflix
+    app: mynetflix
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: myneflix
+      app: mynetflix
   template:
     metadata:
       labels:
-        app: myneflix
+        app: mynetflix
     spec:
       containers:
-      - name: myneflix
+      - name: mynetflix
         image: docker.io/agus3rdyoga/mynetflix:latest
         imagePullPolicy: IfNotPresent
         ports:
