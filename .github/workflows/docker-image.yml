@@ -14,8 +14,8 @@ jobs:
     name: Lint Dockerfile
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
-      - uses: hadolint/hadolint-action@main
+      - uses: actions/checkout@master
+      - uses: hadolint/hadolint-action@master
         with:
           dockerfile: "Dockerfile"
           #failure-threshold: error
@@ -27,12 +27,12 @@ jobs:
       contents: read
       packages: write
     steps:
-    - uses: actions/checkout@main
-    - uses: docker/login-action@main
+    - uses: actions/checkout@master
+    - uses: docker/login-action@master
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - uses: docker/build-push-action@main
+    - uses: docker/build-push-action@master
       with:
         context: .
         build-args: |
@@ -47,20 +47,20 @@ jobs:
       contents: read
       packages: write
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@master
       with:
         ref: 'main'    
-    - uses: docker/login-action@main
+    - uses: docker/login-action@master
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GH_TOKEN }}
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@main
+      uses: docker/metadata-action@master
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}     
-    - uses: docker/build-push-action@main
+    - uses: docker/build-push-action@master
       with:
         context: .
         build-args: |
