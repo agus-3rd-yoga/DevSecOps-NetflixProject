@@ -1,12 +1,10 @@
 name: My Netflix CI
-
 on:
   push:
     branches: [ "main" ]
-
   pull_request:
     branches: [ "main" ]
-    
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: mynetflix
@@ -14,73 +12,55 @@ env:
 jobs:
   lint-dockerfile:
     name: Lint Dockerfile
-
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@master
-      - uses: hadolint/hadolint-action@master
+      - uses: actions/checkout@main
+      - uses: hadolint/hadolint-action@main
         with:
           dockerfile: "Dockerfile"
           #failure-threshold: error
-
-  build-and-push-image-to-Dockerhub-registries:
+  build-and-push-image-to-Dockerhub-registry:
     name: Building & pushing image to Docker Hub
-
     needs: ["lint-dockerfile"]
-
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
-
     steps:
-    - uses: actions/checkout@master
-
-    - uses: docker/login-action@master
+    - uses: actions/checkout@main
+    - uses: docker/login-action@main
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - uses: docker/build-push-action@master
+    - uses: docker/build-push-action@main
       with:
         context: .
         build-args: |
           TMDB_V3_API_KEY=${{ secrets.TMDB_API_KEY }}
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/mynetflix:latest
-
-  build-and-push-image-to-Github-registries:
-
-    name: Pushing image to Github registry
-      
+  build-and-push-image-to-Github-registry:
+    name: Pushing image to Github registry    
     needs: ["lint-dockerfile"]
-
-    runs-on: ubuntu-latest
-      
+    runs-on: ubuntu-latest    
     permissions:
       contents: read
       packages: write
-
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@main
       with:
-        ref: 'main'
-     
-    - uses: docker/login-action@master
+        ref: 'main'    
+    - uses: docker/login-action@main
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GH_TOKEN }}
-
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@master
+      uses: docker/metadata-action@main
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      
-    - uses: docker/build-push-action@master
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}     
+    - uses: docker/build-push-action@main
       with:
         context: .
         build-args: |
